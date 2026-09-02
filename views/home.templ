@@ -1,0 +1,31 @@
+package views
+
+templ HeaderTemplate(name string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>vite-project</title>
+		</head>
+		<body>
+			<header data-testid="headerTemplate">
+				<h1>hello, { name }!</h1>
+			</header>
+		</body>
+	</html>
+}
+
+// <!doctype html>
+// <html lang="en">
+//   <head>
+//     <meta charset="UTF-8" />
+//     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+//     <title>vite-project</title>
+//   </head>
+//   <body>
+//     <script type="module" src="/src/main.js"></script>
+//   </body>
+// </html>

@@ -6,12 +6,13 @@
   "scripts": {
     "build": "vite build",
     "preview": "vite preview",
-    "dev:templ": "templ generate --watch",
-    "dev:go": "go run ./api/web",
+    "dev:templ": "go tool templ generate --watch",
+    "dev:go": "go run ./main.go",
     "dev:vite": "vite",
     "dev": "concurrently -k -n GO,TEMPL,VITE -c blue,magenta,green \"npm run dev:go\" \"npm run dev:templ\" \"npm run dev:vite\""
   },
   "devDependencies": {
+    "concurrently": "^10.0.5",
     "vite": "^8.2.2"
   },
   "dependencies": {
