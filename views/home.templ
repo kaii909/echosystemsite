@@ -1,31 +1,44 @@
 package views
 
-templ HeaderTemplate(name string) {
+templ HeaderTemplate(title string, name string) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
-			<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>vite-project</title>
+			<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+			<title>{ title }</title>
+      <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico"/>
+			<link rel="stylesheet" href="/static/style.css"/>
 		</head>
 		<body>
-			<header data-testid="headerTemplate">
-				<h1>hello, { name }!</h1>
-			</header>
+    
+      <div id="desktop">
+        <div class="desktop-icon" ondblclick="openWindow('About')">
+          <img src="/static/assets/favicon.png" />
+          <span>About</span>
+        </div>
+
+        <div class="window" id="About" style="top: 50px; left: 50px; z-index: 1;">
+					<div class="title-bar">
+						<span>computer</span>
+						<div class="window-controls">
+							<button>_</button>
+							<button>□</button>
+							<button onclick="closeWindow('win-1')">X</button>
+						</div>
+					</div>
+					<div class="window-content">
+						<p>welcome!</p>
+					</div>
+        </div>
+      </div>
+
+      <script src="/static/desktop.js"></script>
+			<!-- <header data-testid="headertemplate"> -->
+			<!-- 	<h1>hello, { name }!</h1> -->
+			<!--      <img src="/static/assets/favicon.png"/> -->
+			<!-- </header> -->
 		</body>
 	</html>
 }
 
-// <!doctype html>
-// <html lang="en">
-//   <head>
-//     <meta charset="UTF-8" />
-//     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//     <title>vite-project</title>
-//   </head>
-//   <body>
-//     <script type="module" src="/src/main.js"></script>
-//   </body>
-// </html>

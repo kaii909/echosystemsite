@@ -1,0 +1,60 @@
+/* Reset básico */
+body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: Tahoma, sans-serif; font-size: 11px; }
+
+/* Área de Trabalho (O clássico verde/azul do XP) */
+#desktop {
+    width: 100%; height: calc(100% - 30px);
+    background: linear-gradient(to bottom, #3a6ea5, #004e98); /* Azul clássico */
+    position: relative;
+}
+
+/* Ícones */
+.desktop-icon {
+    position: absolute; color: white; text-align: center; width: 70px; cursor: pointer;
+    text-shadow: 1px 1px 2px black;
+}
+.desktop-icon img { width: 32px; height: 32px; }
+
+/* A Janela */
+.window {
+    position: absolute; width: 300px;
+    background: #ece9d8; /* Bege clássico do XP */
+    border: 1px solid #0054e3;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    user-select: none; /* Impede que o texto seja selecionado ao arrastar */
+}
+
+/* Barra de Título (O gradiente azul) */
+.title-bar {
+    background: linear-gradient(to bottom, #0058ee, #3a93f7, #2876ef, #0054e3);
+    color: white; font-weight: bold; padding: 4px 6px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-radius: 6px 6px 0 0;
+    cursor: move; /* O cursor muda para a "mãozinha" de mover */
+}
+
+/* Botões de controle (_, □, X) */
+.window-controls button {
+    width: 20px; height: 20px; margin-left: 2px;
+    background: #ece9d8; border: 1px solid #aaa; border-radius: 3px;
+    font-size: 10px; cursor: pointer;
+}
+.window-controls button:hover { background: #ddd; }
+.window-controls button:last-child:hover { background: red; color: white; }
+
+/* Conteúdo da janela */
+.window-content { padding: 15px; background: white; border: 1px solid #aaa; margin: 4px; }
+
+/* Barra de Tarefas */
+#taskbar {
+    position: absolute; bottom: 0; width: 100%; height: 30px;
+    background: linear-gradient(to bottom, #245edb, #1941a5);
+    display: flex; align-items: center; padding-left: 5px;
+}
+
+#start-btn {
+    background: linear-gradient(to bottom, #3c8d2d, #2d6e1f);
+    color: white; font-weight: bold; font-style: italic;
+    border-radius: 0 10px 10px 0; padding: 4px 15px; border: none; cursor: pointer;
+}

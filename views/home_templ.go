@@ -8,7 +8,7 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func HeaderTemplate(name string) templ.Component {
+func HeaderTemplate(title string, name string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,20 +29,20 @@ func HeaderTemplate(name string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>vite-project</title></head><body><header data-testid=\"headerTemplate\"><h1>Hello, ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><!-- <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/> --><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 14, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 9, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "!</h1></header></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><link rel=\"icon\" type=\"image/x-icon\" href=\"/static/assets/favicon.ico\"><link rel=\"stylesheet\" href=\"/static/style.css\"></head><body><div id=\"desktop\"><div class=\"desktop-icon\" ondblclick=\"openWindow('About')\"><img src=\"/static/assets/favicon.png\"> <span>About</span></div><div class=\"window\" id=\"About\" style=\"top: 50px; left: 50px; z-index: 1;\"><div class=\"title-bar\"><span>computer</span><div class=\"window-controls\"><button>_</button> <button>□</button> <button onclick=\"closeWindow('win-1')\">X</button></div></div><div class=\"window-content\"><p>welcome!</p></div></div></div><script src=\"/static/desktop.js\"></script><!-- <header data-testid=\"headertemplate\"> --><!-- \t<h1>hello, { name }!</h1> --><!--      <img src=\"/static/assets/favicon.png\"/> --><!-- </header> --></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -50,18 +50,4 @@ func HeaderTemplate(name string) templ.Component {
 	})
 }
 
-// <!doctype html>
-// <html lang="en">
-//
-//	<head>
-//	  <meta charset="UTF-8" />
-//	  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-//	  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//	  <title>vite-project</title>
-//	</head>
-//	<body>
-//	  <script type="module" src="/src/main.js"></script>
-//	</body>
-//
-// </html>
 var _ = templruntime.GeneratedTemplate

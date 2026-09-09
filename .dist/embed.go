@@ -1,6 +1,6 @@
-package web
+package main
 
 import "embed"
 
-//go:embed dist/*
-var DistFS embed.FS
+//go:embed static/css/*
+var cssFS embed.FS
