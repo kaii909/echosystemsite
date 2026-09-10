@@ -1,13 +1,13 @@
 package views
 
-import "www.echosystem/util"
+import "echosystem/util"
 
-templ HeaderTemplate(title string, name string) {
+templ DesktopRoot() {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
-			<title>{ title }</title>
+			<title>echosystem</title>
 			<link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico"/>
 			<link rel="stylesheet" href="/static/style.css"/>
 		</head>
@@ -26,7 +26,6 @@ templ HeaderTemplate(title string, name string) {
 					<img src="/static/assets/favicon.png" alt="guestbook"/>
 					<span>guestbook</span>
 				</div>
-
 				<!-- WELCOME WINDOW (appears on first visit) -->
 				<div class="window window-welcome" id="win-welcome" style="top: 200px; left: 400px; z-index: 100; display: none;">
 					<div class="title-bar">
@@ -45,7 +44,6 @@ templ HeaderTemplate(title string, name string) {
 						</div>
 					</div>
 				</div>
-
 				<!-- Windows -->
 				<div class="window" id="win-home" style="top: 50px; left: 50px; z-index: 1;">
 					<div class="title-bar">
@@ -60,7 +58,6 @@ templ HeaderTemplate(title string, name string) {
 						<p>welcome!</p>
 					</div>
 				</div>
-
 				<div class="window" id="win-notepad" style="top: 100px; left: 300px; z-index: 2; display: none;">
 					<div class="title-bar">
 						<span>Bloco de Notas</span>
@@ -74,7 +71,6 @@ templ HeaderTemplate(title string, name string) {
 						<textarea style="width: 100%; height: 200px; border: 1px solid #ccc;"></textarea>
 					</div>
 				</div>
-
 				<div class="window" id="win-guestbook" style="top: 80px; left: 250px; z-index: 2; display: none;">
 					<div class="title-bar">
 						<span>Guestbook</span>
@@ -100,12 +96,10 @@ templ HeaderTemplate(title string, name string) {
 					</div>
 				</div>
 			</div>
-
 			<div id="taskbar">
 				<!-- <button id="start-btn">home</button> -->
 				<div id="taskbar-windows"></div>
 			</div>
-
 			<script src={ "/static/desktop.js?v=" + version.AppVersion } defer></script>
 		</body>
 	</html>

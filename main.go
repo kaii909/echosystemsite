@@ -11,13 +11,13 @@ import (
 	// "os"
 	"encoding/json"
 
-	"www.echosystem/views"
+	"echosystem/views"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+func desktopHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	err := views.HeaderTemplate("echosystem", "person").Render(ctx, w)
+	err := views.DesktopRoot().Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
@@ -30,7 +30,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	mux.HandleFunc("/", homeHandler)
+	mux.HandleFunc("/", desktopHandler)
 
 	// guestbook API endpoints
 	mux.HandleFunc("/api/guestbook", func(w http.ResponseWriter, r *http.Request) {
