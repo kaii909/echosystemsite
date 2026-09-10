@@ -28,4 +28,4 @@ dist-ssr
 .unused
 
 # databases
-guestbook.json*
+*.json
