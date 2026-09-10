@@ -14,30 +14,30 @@ templ HeaderTemplate(title string, name string) {
 		<body>
 			<div id="desktop">
 				<!-- Desktop icons -->
-				<div class="desktop-icon" data-window="win-about">
-					<img src="/static/assets/favicon.png" alt="About"/>
-					<span>About</span>
+				<div class="desktop-icon" data-window="win-home">
+					<img src="/static/assets/favicon.png" alt="home"/>
+					<span>home</span>
 				</div>
 				<div class="desktop-icon" data-window="win-notepad">
-					<img src="/static/assets/favicon.png" alt="Notepad"/>
-					<span>Bloco de Notas</span>
+					<img src="/static/assets/favicon.png" alt="notepad"/>
+					<span>chat</span>
 				</div>
 				<div id="ico-guestbook" class="desktop-icon" data-window="win-guestbook" hidden>
-					<img src="/static/assets/favicon.png" alt="Guestbook"/>
-					<span>Guestbook</span>
+					<img src="/static/assets/favicon.png" alt="guestbook"/>
+					<span>guestbook</span>
 				</div>
 
 				<!-- WELCOME WINDOW (appears on first visit) -->
 				<div class="window window-welcome" id="win-welcome" style="top: 200px; left: 400px; z-index: 100; display: none;">
 					<div class="title-bar">
-						<span>Welcome!</span>
+						<span>welcome to the resonant bell world</span>
 						<div class="window-controls">
 							<button class="btn-close">X</button>
 						</div>
 					</div>
 					<div class="window-content guestbook-welcome-content">
-						<p>It looks like it's your first time here...</p>
-						<p>Leave your mark in the guestbook!</p>
+						<p>it looks like it's your first time here...</p>
+						<p>leave your mark in the guestbook!</p>
 						<div class="guestbook-input-row">
 							<input type="text" id="welcome-name-input" placeholder="my name is..." maxlength="40"/>
 							<button id="welcome-write-btn" class="btn-primary">WRITE</button>

@@ -1,9 +1,18 @@
 let currentZIndex = 10;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   initializeWindows();
   initializeDesktopIcons();
   initializeGuestbook();
+});
+
+window.addEventListener("resize", () => {
+  const windows = document.querySelectorAll(".window");
+  windows.forEach((win) => {
+    if (win.dataset.maximized === "true") {
+      setWindowSize(win);
+    }
+  });
 });
 
 // ============================================
@@ -12,37 +21,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Toggle window maximize/restore state
 function toggleMaximize(win) {
-  if (win.dataset.maximized === 'true') {
+  if (win.dataset.maximized === "true") {
     win.style.width = win.dataset.originalWidth;
     win.style.height = win.dataset.originalHeight;
     win.style.top = win.dataset.originalTop;
     win.style.left = win.dataset.originalLeft;
-    win.dataset.maximized = 'false';
-  } else {
-    win.dataset.originalWidth = win.style.width || win.offsetWidth + 'px';
-    win.dataset.originalHeight = win.style.height || win.offsetHeight + 'px';
-    win.dataset.originalTop = win.style.top;
-    win.dataset.originalLeft = win.style.left;
+    win.dataset.maximized = "false";
+  } else setWindowSize(win);
+}
 
-    win.style.width = '100%';
-    win.style.height = 'calc(100vh - 30px)';
-    win.style.top = '0';
-    win.style.left = '0';
-    win.dataset.maximized = 'true';
+function setWindowSize(win) {
+  // SÓ guarda o tamanho original se ela NÃO estiver maximizada ainda
+  // Isso impede que o resize do navegador destrua o tamanho padrão da janela
+  if (win.dataset.maximized !== "true") {
+    win.dataset.originalWidth = win.style.width || win.offsetWidth + "px";
+    win.dataset.originalHeight = win.style.height || win.offsetHeight + "px";
+    win.dataset.originalTop = win.style.top || "50px"; // Garante um fallback caso esteja vazio
+    win.dataset.originalLeft = win.style.left || "50px";
   }
+
+  // Atualiza para o novo tamanho do navegador (comportamento do resize)
+  win.style.height = window.innerHeight - 31 + "px";
+  win.style.top = "0";
+  win.style.left = "0";
+  win.style.width = window.innerWidth + "px";
+  win.dataset.maximized = "true";
 }
 
 // ============================================
 // WINDOW INITIALIZATION
 // ============================================
 function initializeWindows() {
-  const windows = document.querySelectorAll('.window');
-  windows.forEach(win => {
+  const windows = document.querySelectorAll(".window");
+  windows.forEach((win) => {
     attachDragBehavior(win);
     attachButtonBehavior(win);
-    if (win.style.display !== 'none') {
+    if (win.style.display !== "none") {
       addWindowToTaskbar(win);
-    }
+    };
   });
 }
 
@@ -50,103 +66,111 @@ function initializeWindows() {
 // DRAG AND DROP BEHAVIOR
 // ============================================
 function attachDragBehavior(win) {
-  const titleBar = win.querySelector('.title-bar');
+  const titleBar = win.querySelector(".title-bar");
+  let isMouseDragging = false;
 
-  titleBar.addEventListener('mousedown', (e) => {
-    if (e.target.tagName === 'BUTTON') return;
+  titleBar.addEventListener("mousedown", (e) => {
+    if (e.target.tagName === "BUTTON") return;
 
     bringToFront(win);
-    win.classList.add('is-dragging');
+    win.classList.add("is-dragging");
 
-    let shiftX, shiftY;
+    let shiftX = 0;
+    let shiftY = 0;
+    let hasRestoredThisDrag = false;
 
-    // If window is maximized, restore it and center it under the mouse
-    if (win.dataset.maximized === 'true') {
-      toggleMaximize(win);
-
-      // Force synchronous DOM reflow to get the restored dimensions immediately
-      void win.offsetWidth;
-
-      // Calculate position to center the window horizontally under the cursor
-      let newLeft = e.clientX - (win.offsetWidth / 2);
-      // Place the top edge slightly below the cursor so it rests on the title bar
-      let newTop = e.clientY - 20;
-
-      // Apply boundary checks
-      newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - win.offsetWidth));
-      newTop = Math.max(0, Math.min(newTop, window.innerHeight - win.offsetHeight - 30));
-
-      // Apply the new position
-      win.style.left = newLeft + 'px';
-      win.style.top = newTop + 'px';
-
-      // Recalculate the offset based on the new position
-      shiftX = e.clientX - newLeft;
-      shiftY = e.clientY - newTop;
-    } else {
-      // Normal drag calculation for non-maximized windows
+    if (win.dataset.maximized !== "true") {
       const rect = win.getBoundingClientRect();
       shiftX = e.clientX - rect.left;
       shiftY = e.clientY - rect.top;
     }
 
     // Move the window following the mouse
-    const onMouseMove = (e) => {
-      let newX = e.clientX - shiftX;
-      let newY = e.clientY - shiftY;
+    const onMouseMove = (moveEvent) => {
+      isMouseDragging = true;
+
+      if (win.dataset.maximized === "true") {
+        if (!hasRestoredThisDrag) {
+          toggleMaximize(win);
+
+          // Force synchronous DOM reflow to get the restored dimensions immediately
+          void win.offsetWidth;
+
+          let newLeft = moveEvent.clientX - win.offsetWidth / 2;
+          let newTop = moveEvent.clientY - 20;
+
+          // Apply boundary checks
+          newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - win.offsetWidth));
+          newTop = Math.max(0, Math.min(newTop, window.innerHeight - win.offsetHeight - 30));
+
+          // Apply the new position
+          win.style.left = newLeft + "px";
+          win.style.top = newTop + "px";
+
+          // offset recalc
+          shiftX = moveEvent.clientX - newLeft;
+          shiftY = moveEvent.clientY - newTop;
+          
+          hasRestoredThisDrag = true;
+        }
+      }
+
+      let newX = moveEvent.clientX - shiftX;
+      let newY = moveEvent.clientY - shiftY;
 
       // Keep window within viewport boundaries
       newX = Math.max(0, Math.min(newX, window.innerWidth - win.offsetWidth));
       newY = Math.max(0, Math.min(newY, window.innerHeight - win.offsetHeight - 30));
 
-      win.style.left = newX + 'px';
-      win.style.top = newY + 'px';
+      win.style.left = newX + "px";
+      win.style.top = newY + "px";
     };
 
     // Clean up event listeners when mouse is released
     const onMouseUp = () => {
-      win.classList.remove('is-dragging');
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      isMouseDragging = false;
+      win.classList.remove("is-dragging");
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
   });
 
   // Maximize/restore on double click on the title bar
-  titleBar.addEventListener('dblclick', (e) => {
-    if (e.target.tagName === 'BUTTON') return;
+  titleBar.addEventListener("dblclick", (e) => {
+    if (e.target.tagName === "BUTTON") return;
     toggleMaximize(win);
   });
 
   // Bring to front on any click within the window
-  win.addEventListener('mousedown', () => bringToFront(win));
+  win.addEventListener("mousedown", () => bringToFront(win));
 }
 
 // ============================================
 // BUTTON BEHAVIOR
 // ============================================
 function attachButtonBehavior(win) {
-  const btnClose = win.querySelector('.btn-close');
-  const btnMinimize = win.querySelector('.btn-minimize');
-  const btnMaximize = win.querySelector('.btn-maximize');
+  const btnClose = win.querySelector(".btn-close");
+  const btnMinimize = win.querySelector(".btn-minimize");
+  const btnMaximize = win.querySelector(".btn-maximize");
 
   if (btnClose) {
-    btnClose.addEventListener('click', () => {
-      win.style.display = 'none';
+    btnClose.addEventListener("click", () => {
+      win.style.display = "none";
       removeWindowFromTaskbar(win.id);
     });
   }
 
   if (btnMinimize) {
-    btnMinimize.addEventListener('click', () => {
-      win.style.display = 'none';
+    btnMinimize.addEventListener("click", () => {
+      win.style.display = "none";
     });
   }
 
   if (btnMaximize) {
-    btnMaximize.addEventListener('click', () => {
+    btnMaximize.addEventListener("click", () => {
       toggleMaximize(win);
     });
   }
@@ -159,8 +183,8 @@ function bringToFront(win) {
   currentZIndex++;
   win.style.zIndex = currentZIndex;
 
-  if (win.style.display === 'none') {
-    win.style.display = 'block';
+  if (win.style.display === "none") {
+    win.style.display = "block";
     addWindowToTaskbar(win);
   }
 }
@@ -169,19 +193,19 @@ function bringToFront(win) {
 // DESKTOP ICONS
 // ============================================
 function initializeDesktopIcons() {
-  const icons = document.querySelectorAll('.desktop-icon');
+  const icons = document.querySelectorAll(".desktop-icon");
 
-  icons.forEach(icon => {
-    icon.addEventListener('dblclick', () => {
+  icons.forEach((icon) => {
+    icon.addEventListener("dblclick", () => {
       const windowId = icon.dataset.window;
       const win = document.getElementById(windowId);
 
       if (win) {
-        win.style.display = 'block';
+        win.style.display = "block";
         bringToFront(win);
         addWindowToTaskbar(win);
 
-        if (windowId === 'win-guestbook') {
+        if (windowId === "win-guestbook") {
           loadGuestbookEntries();
         }
       }
@@ -193,25 +217,25 @@ function initializeDesktopIcons() {
 // TASKBAR MANAGEMENT
 // ============================================
 function addWindowToTaskbar(win) {
-  const taskbar = document.getElementById('taskbar-windows');
+  const taskbar = document.getElementById("taskbar-windows");
   const windowId = win.id;
 
   if (document.getElementById(`taskbar-${windowId}`)) return;
 
-  const btn = document.createElement('button');
+  const btn = document.createElement("button");
   btn.id = `taskbar-${windowId}`;
-  btn.className = 'taskbar-button';
-  btn.textContent = win.querySelector('.title-bar span').textContent;
+  btn.className = "taskbar-button";
+  btn.textContent = win.querySelector(".title-bar span").textContent;
 
-  btn.addEventListener('click', () => {
-    if (win.style.display === 'none') {
-      win.style.display = 'block';
+  btn.addEventListener("click", () => {
+    if (win.style.display === "none") {
+      win.style.display = "block";
       bringToFront(win);
-      if (windowId === 'win-guestbook') {
+      if (windowId === "win-guestbook") {
         loadGuestbookEntries();
       }
     } else {
-      win.style.display = 'none';
+      win.style.display = "none";
     }
   });
 
@@ -317,9 +341,9 @@ function submitGuestbookEntry(name, onSuccess) {
   fetch("/api/guestbook", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: name })
+    body: JSON.stringify({ name: name }),
   })
-    .then(res => {
+    .then((res) => {
       if (!res.ok) throw new Error("Failed to save");
       return res.json();
     })
@@ -327,7 +351,7 @@ function submitGuestbookEntry(name, onSuccess) {
       onSuccess();
       loadGuestbookEntries();
     })
-    .catch(err => {
+    .catch((err) => {
       console.error("Guestbook error:", err);
       alert("Error saving entry: " + err.message);
     });
@@ -336,24 +360,30 @@ function submitGuestbookEntry(name, onSuccess) {
 // Fetches and renders all entries
 function loadGuestbookEntries() {
   fetch("/api/guestbook")
-    .then(res => res.json())
-    .then(entries => {
+    .then((res) => res.json())
+    .then((entries) => {
       const list = document.getElementById("guestbook-list");
       if (!list) return;
 
       if (entries.length === 0) {
-        list.innerHTML = "<p class='guestbook-empty'>No signatures yet. Be the first!</p>";
+        list.innerHTML =
+          "<p class='guestbook-empty'>No signatures yet. Be the first!</p>";
         return;
       }
 
-      list.innerHTML = entries.slice().reverse().map(entry =>
-        `<div class="guestbook-entry">
+      list.innerHTML = entries
+        .slice()
+        .reverse()
+        .map(
+          (entry) =>
+            `<div class="guestbook-entry">
                 <span class="guestbook-name">${escapeHtml(entry.name)}</span>
                 <span class="guestbook-date">${entry.timestamp}</span>
-            </div>`
-      ).join("");
+            </div>`,
+        )
+        .join("");
     })
-    .catch(err => console.error("Failed to load entries:", err));
+    .catch((err) => console.error("Failed to load entries:", err));
 }
 
 // Prevents XSS attacks when rendering user input
