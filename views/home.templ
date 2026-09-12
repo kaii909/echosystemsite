@@ -9,7 +9,8 @@ templ DesktopRoot() {
 			<meta charset="UTF-8"/>
 			<title>echosystem</title>
 			<link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico"/>
-			<link rel="stylesheet" href="/static/style.css"/>
+			<link rel="stylesheet" href={ "/static/style.css?v=" + util.AppVersion }/>
+			<script src={ "/static/desktop.js?v=" + util.AppVersion } defer></script>
 		</head>
 		<body>
 			<div id="desktop">
@@ -22,9 +23,16 @@ templ DesktopRoot() {
 					<img src="/static/assets/favicon.png" alt="notepad"/>
 					<span>chat</span>
 				</div>
-				<div id="ico-guestbook" class="desktop-icon" data-window="win-guestbook" hidden>
+				<div id="ico-guestbook" class="desktop-icon" data-window="win-guestbook" hidden="true">
 					<img src="/static/assets/favicon.png" alt="guestbook"/>
 					<span>guestbook</span>
+				</div>
+				<!-- Background -->
+				<div class="version-watermark">
+					<img class="corner-desktop-icon" src="/static/assets/wip.svg"/>
+					<a href={ "https://github.com/kaii909/echosystemsite/commit/" + util.AppVersion } target="_blank" rel="noopener noreferrer">
+						commit { util.AppVersion }
+					</a>
 				</div>
 				<!-- WELCOME WINDOW (appears on first visit) -->
 				<div class="window window-welcome" id="win-welcome" style="top: 200px; left: 400px; z-index: 100; display: none;">
@@ -56,11 +64,13 @@ templ DesktopRoot() {
 					</div>
 					<div class="window-content">
 						<p>welcome!</p>
+						<p></p>
+						<p>this place is under construction, cya in the future.</p>
 					</div>
 				</div>
 				<div class="window" id="win-notepad" style="top: 100px; left: 300px; z-index: 2; display: none;">
 					<div class="title-bar">
-						<span>Bloco de Notas</span>
+						<span>unfinished</span>
 						<div class="window-controls">
 							<button class="btn-minimize">_</button>
 							<button class="btn-maximize">□</button>
@@ -100,7 +110,6 @@ templ DesktopRoot() {
 				<!-- <button id="start-btn">home</button> -->
 				<div id="taskbar-windows"></div>
 			</div>
-			<script src={ "/static/desktop.js?v=" + version.AppVersion } defer></script>
 		</body>
 	</html>
 }
